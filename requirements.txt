@@ -2,6 +2,7 @@ numpy
 scipy
 
 advent-of-code-data
+rich
 
 isort
 black
