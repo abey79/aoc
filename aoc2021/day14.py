@@ -1,4 +1,6 @@
+import itertools
 import sys
+from collections import Counter
 from pathlib import Path
 from typing import Callable
 
@@ -10,35 +12,73 @@ install(show_locals=True)
 console = Console()
 
 DAY = int("".join(s for s in Path(__file__).name if s.isdigit()))
-# noinspection SpellCheckingInspection
-TEST_DATA: str = """"""
-TEST_RESULT_PART1: int | None = None
-TEST_RESULT_PART2: int | None = None
+TEST_DATA: str = """NNCB
+
+CH -> B
+HH -> N
+CB -> H
+NH -> C
+HB -> C
+HC -> B
+HN -> C
+NN -> C
+BH -> H
+NC -> B
+NB -> B
+BN -> B
+BB -> N
+BC -> B
+CC -> N
+CN -> C"""
+TEST_RESULT_PART1: int | None = 1588
+TEST_RESULT_PART2: int | None = 2188189693529
 
 
-def part1(data: str) -> int:
-    pass
+def part1(data: str, iter_count: int) -> int:
+    template, rule_data = data.split("\n\n")
 
+    rules = {}
+    for rule in rule_data.splitlines():
+        (a, b), c = rule.split(" -> ")
+        rules[(a, b)] = c
 
-def part2(data: str) -> int:
-    pass
+    letter_counter = Counter(template)
+    pair_counter = Counter(itertools.pairwise(template))
+
+    for _ in range(iter_count):
+        new_pair_counter = Counter()
+
+        for (a, b), n in pair_counter.items():
+            c = rules[(a, b)]
+
+            new_pair_counter.update({a + c: n, c + b: n})
+            letter_counter.update({c: n})
+
+        pair_counter = new_pair_counter
+
+    res = letter_counter.most_common()
+    return res[0][1] - res[-1][1]
 
 
 def run_test_part1(*args, **kwargs):
     if TEST_RESULT_PART1 is None:
         raise NotImplementedError
-    # noinspection PyArgumentList
     assert part1(TEST_DATA, *args, **kwargs) == TEST_RESULT_PART1
 
 
 def run_test_part2(*args, **kwargs):
     if TEST_RESULT_PART2 is None:
         raise NotImplementedError
-    # noinspection PyArgumentList
-    assert part2(TEST_DATA, *args, **kwargs) == TEST_RESULT_PART2
+    assert part1(TEST_DATA, *args, **kwargs) == TEST_RESULT_PART2
 
 
-def run_solution(name: str, test_func: Callable, solution: Callable, *args, **kwargs):
+def run_solution(
+    name: str,
+    test_func: Callable,
+    solution: Callable,
+    *args,
+    **kwargs,
+):
     proceed = True
     try:
         test_func(*args, **kwargs)
@@ -59,8 +99,8 @@ def run_solution(name: str, test_func: Callable, solution: Callable, *args, **kw
 
 def main() -> None:
     console.print(f"Running for day {DAY}", style="blue")
-    run_solution("part 1", run_test_part1, part1)
-    run_solution("part 2", run_test_part2, part2)
+    run_solution("part 1", run_test_part1, part1, 10)
+    run_solution("part 2", run_test_part2, part1, 40)
 
 
 if __name__ == "__main__":
