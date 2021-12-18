@@ -1,11 +1,14 @@
-numpy
-scipy
-matplotlib
+numpy~=1.21.4
+scipy~=1.7.3
+matplotlib~=3.5.1
 
-advent-of-code-data
-rich
+advent-of-code-data~=1.1.0
+rich~=10.15.2
 
 isort
 black
-pytest
+pytest~=6.2.5
 mypy
+
+scikit-image~=0.19.0
+tqdm~=4.62.3
