@@ -245,17 +245,10 @@ def part1(data: str) -> int:
 
 def part2(data: str) -> int:
     lines = data.splitlines()
-
-    max_val = 0
-    for line1, line2 in tqdm.tqdm(itertools.combinations(lines, 2)):
-        mag = max(
-            (Node.from_string(line1) + Node.from_string(line2)).magnitude(),
-            (Node.from_string(line2) + Node.from_string(line1)).magnitude(),
-        )
-        if mag > max_val:
-            max_val = mag
-
-    return max_val
+    return max(
+        (Node.from_string(line1) + Node.from_string(line2)).magnitude()
+        for line1, line2 in tqdm.tqdm(itertools.permutations(lines, 2))
+    )
 
 
 def run_test_part1(*args, **kwargs):
