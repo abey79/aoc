@@ -4,9 +4,7 @@ from pathlib import Path
 import aocd
 import pytest
 from rich.console import Console
-from rich.traceback import install
 
-install(show_locals=True)
 console = Console()
 
 YEAR = 2021
