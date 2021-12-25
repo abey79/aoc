@@ -37,17 +37,27 @@ def test_part2():
 
 
 def main() -> None:
-    console.print(f"AOC {YEAR} day {DAY}", style="blue")
+    console.rule(f"AOC {YEAR} day {DAY}", style="blue")
     console.print("Tests: ", end="", style="blue")
     pytest.main(["-q", __file__])
     start = time.time()
     res = part1(DATA)
     delta = time.time() - start
-    console.print(f"Part 1 solution: {res} (execution time: {delta*1000:.2f}ms)", style="blue")
+    console.print(
+        f"Part [bold cyan]1[/] solution: [bold green]{res}[/] "
+        f"(execution time: [bold cyan]{delta * 1000:.2f}ms[/])",
+        style="blue",
+        highlight=False,
+    )
     start = time.time()
     res = part2(DATA)
     delta = time.time() - start
-    console.print(f"Part 2 solution: {res} (execution time: {delta*1000:.2f}ms)", style="blue")
+    console.print(
+        f"Part [bold cyan]2[/] solution: [bold green]{res}[/] "
+        f"(execution time: [bold cyan]{delta * 1000:.2f}ms[/])",
+        style="blue",
+        highlight=False,
+    )
 
 
 if __name__ == "__main__":
