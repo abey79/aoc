@@ -1,3 +1,4 @@
+import contextlib
 import time
 from pathlib import Path
 
@@ -34,28 +35,28 @@ def test_part2():
     assert part2(TEST_DATA) == TEST_RESULT_PART2
 
 
+@contextlib.contextmanager
+def measure_time():
+    start = time.time()
+    yield
+    delta = time.time() - start
+    console.print(
+        f"Execution time: [bold cyan]{delta * 1000:.2f}ms[/]",
+        style="blue",
+        highlight=False,
+    )
+
+
 def main() -> None:
     console.rule(f"AOC {YEAR} day {DAY}", style="blue")
     console.print("Tests: ", end="", style="blue")
     pytest.main(["-q", __file__])
-    start = time.time()
-    res = part1(DATA)
-    delta = time.time() - start
-    console.print(
-        f"Part [bold cyan]1[/] solution: [bold green]{res}[/] "
-        f"(execution time: [bold cyan]{delta * 1000:.2f}ms[/])",
-        style="blue",
-        highlight=False,
-    )
-    start = time.time()
-    res = part2(DATA)
-    delta = time.time() - start
-    console.print(
-        f"Part [bold cyan]2[/] solution: [bold green]{res}[/] "
-        f"(execution time: [bold cyan]{delta * 1000:.2f}ms[/])",
-        style="blue",
-        highlight=False,
-    )
+    with measure_time():
+        res = part1(DATA)
+        console.print(f"Part [bold cyan]1[/] solution: [bold green]{res}[/]", style="blue")
+    with measure_time():
+        res = part2(DATA)
+        console.print(f"Part [bold cyan]2[/] solution: [bold green]{res}[/]", style="blue")
 
 
 if __name__ == "__main__":
