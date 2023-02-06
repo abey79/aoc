@@ -1,3 +1,4 @@
+#[allow(unused_imports)]
 use itertools::Itertools;
 
 pub fn generator(input: &str) -> Vec<i64> {

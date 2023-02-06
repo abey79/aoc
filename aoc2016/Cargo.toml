@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 aoc-main = "0.5.0"
 itertools = "0.10.5"
+md5 = "0.7.0"
