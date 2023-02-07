@@ -1,4 +1,5 @@
 use md5;
+use rayon::prelude::*;
 
 pub fn generator(input: &str) -> String {
     input.to_string()
@@ -21,6 +22,7 @@ pub fn part_1(input: &str) -> String {
     decoded
 }
 
+#[allow(dead_code)]
 pub fn part_2(input: &str) -> String {
     let mut decoded = String::from("________");
 
@@ -41,7 +43,50 @@ pub fn part_2(input: &str) -> String {
     decoded
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+struct Match {
+    pos: u8,
+    c: char,
+}
+
+fn check_hash(input: &str, seed: usize) -> Option<Match> {
+    let hash = md5::compute(format!("{}{}", input, seed));
+    let hash = format!("{:x}", hash);
+
+    if hash.starts_with("00000") {
+        let pos = hash.chars().nth(5).unwrap().to_digit(10).unwrap_or(9) as usize;
+        if pos < 8 {
+            return Some(Match {
+                pos: pos as u8,
+                c: hash.chars().nth(6).unwrap(),
+            });
+        }
+    }
+
+    None
+}
+
+pub fn part_2_thread(input: &str) -> String {
+    let mut decoded = String::from("________");
+
+    const BATCH_SIZE: usize = 100000;
+
+    for batch in 0.. {
+        let matches: Vec<Match> = (batch * BATCH_SIZE..(batch + 1) * BATCH_SIZE)
+            .into_par_iter()
+            .map(|i| check_hash(input, i))
+            .filter(|m| m.is_some())
+            .map(|m| m.unwrap())
+            .collect();
+
+        for m in matches {
+            if decoded.chars().nth(m.pos as usize).unwrap() == '_' {
+                decoded.replace_range(m.pos as usize..m.pos as usize + 1, &m.c.to_string());
+                if !decoded.contains('_') {
+                    return format!("{} (batches: {}x{})", decoded, batch, BATCH_SIZE);
+                }
+            }
+        }
+    }
+
+    "Failed!".to_string()
 }
