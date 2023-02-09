@@ -4,7 +4,7 @@ use regex::Regex;
 use std::collections::HashMap;
 
 #[derive(Debug, Clone, Copy)]
-enum Destination {
+pub enum Destination {
     Bot(usize),
     Output(usize),
 }
