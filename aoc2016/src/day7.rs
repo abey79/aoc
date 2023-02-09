@@ -64,7 +64,7 @@ fn has_ssl(input: &str) -> bool {
             .map(|b| b.reverse()),
     );
 
-    supernet_bab.intersection(&hypernet_bab).next() != None
+    supernet_bab.intersection(&hypernet_bab).next().is_some()
 }
 
 pub fn part_2(input: &[String]) -> i64 {

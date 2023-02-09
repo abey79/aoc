@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 
 /aoc2016/input/2016/
+
+.DS_Store

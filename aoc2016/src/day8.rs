@@ -16,7 +16,7 @@ impl Command {
                 Command::Rect(xy[0].parse().unwrap(), xy[1].parse().unwrap())
             }
             "rotate" => {
-                let axis = parts[2].split("=").collect::<Vec<&str>>()[1]
+                let axis = parts[2].split('=').collect::<Vec<&str>>()[1]
                     .parse()
                     .unwrap();
                 let steps = parts[4].parse().unwrap();
@@ -33,7 +33,7 @@ impl Command {
 }
 
 pub fn generator(input: &str) -> Vec<Command> {
-    input.lines().map(|s| Command::from_str(s)).collect()
+    input.lines().map(Command::from_str).collect()
 }
 
 fn render_screen(input: &[Command]) -> Array2<bool> {

@@ -1,4 +1,3 @@
-use md5;
 use rayon::prelude::*;
 
 pub fn generator(input: &str) -> String {
@@ -9,8 +8,8 @@ pub fn part_1(input: &str) -> String {
     let mut decoded = String::new();
 
     for i in 0.. {
-        let hash = md5::compute(format!("{}{}", input, i));
-        let hash = format!("{:x}", hash);
+        let hash = md5::compute(format!("{input}{i}"));
+        let hash = format!("{hash:x}");
         if hash.starts_with("00000") {
             decoded.push(hash.chars().nth(5).unwrap());
             if decoded.len() == 8 {
@@ -27,8 +26,8 @@ pub fn part_2(input: &str) -> String {
     let mut decoded = String::from("________");
 
     for i in 0.. {
-        let hash = md5::compute(format!("{}{}", input, i));
-        let hash = format!("{:x}", hash);
+        let hash = md5::compute(format!("{input}{i}"));
+        let hash = format!("{hash:x}");
         if hash.starts_with("00000") {
             let pos = hash.chars().nth(5).unwrap().to_digit(10).unwrap_or(9) as usize;
             if pos < 8 && decoded.chars().nth(pos).unwrap() == '_' {
@@ -49,8 +48,8 @@ struct Match {
 }
 
 fn check_hash(input: &str, seed: usize) -> Option<Match> {
-    let hash = md5::compute(format!("{}{}", input, seed));
-    let hash = format!("{:x}", hash);
+    let hash = md5::compute(format!("{input}{seed}"));
+    let hash = format!("{hash:x}");
 
     if hash.starts_with("00000") {
         let pos = hash.chars().nth(5).unwrap().to_digit(10).unwrap_or(9) as usize;
@@ -82,7 +81,7 @@ pub fn part_2_thread(input: &str) -> String {
             if decoded.chars().nth(m.pos as usize).unwrap() == '_' {
                 decoded.replace_range(m.pos as usize..m.pos as usize + 1, &m.c.to_string());
                 if !decoded.contains('_') {
-                    return format!("{} (batches: {}x{})", decoded, batch, BATCH_SIZE);
+                    return format!("{decoded} (batches: {batch}x{BATCH_SIZE})");
                 }
             }
         }

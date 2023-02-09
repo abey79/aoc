@@ -9,12 +9,12 @@ pub fn part_1(input: &[String]) -> i64 {
     let mut sum = 0;
 
     for line in input {
-        let line = line.replace("]", "");
-        let (room_id, checksum) = line.split_once("[").unwrap();
-        let (room, id) = room_id.rsplit_once("-").unwrap();
+        let line = line.replace(']', "");
+        let (room_id, checksum) = line.split_once('[').unwrap();
+        let (room, id) = room_id.rsplit_once('-').unwrap();
 
         let mut counts: HashMap<char, i32> = HashMap::new();
-        for c in room.replace("-", "").chars() {
+        for c in room.replace('-', "").chars() {
             *counts.entry(c).or_default() += 1;
         }
 
@@ -40,12 +40,12 @@ pub fn part_1(input: &[String]) -> i64 {
 
 pub fn part_2(input: &[String]) -> i64 {
     for line in input {
-        let line = line.replace("]", "");
-        let (room_id, checksum) = line.split_once("[").unwrap();
-        let (room, id) = room_id.rsplit_once("-").unwrap();
+        let line = line.replace(']', "");
+        let (room_id, checksum) = line.split_once('[').unwrap();
+        let (room, id) = room_id.rsplit_once('-').unwrap();
 
         let mut counts: HashMap<char, i32> = HashMap::new();
-        for c in room.replace("-", "").chars() {
+        for c in room.replace('-', "").chars() {
             *counts.entry(c).or_default() += 1;
         }
 
