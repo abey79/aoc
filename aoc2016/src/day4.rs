@@ -13,7 +13,7 @@ pub fn part_1(input: &[String]) -> i64 {
         let (room_id, checksum) = line.split_once("[").unwrap();
         let (room, id) = room_id.rsplit_once("-").unwrap();
 
-        let mut counts = HashMap::new();
+        let mut counts: HashMap<char, i32> = HashMap::new();
         for c in room.replace("-", "").chars() {
             *counts.entry(c).or_default() += 1;
         }
@@ -44,7 +44,7 @@ pub fn part_2(input: &[String]) -> i64 {
         let (room_id, checksum) = line.split_once("[").unwrap();
         let (room, id) = room_id.rsplit_once("-").unwrap();
 
-        let mut counts = HashMap::new();
+        let mut counts: HashMap<char, i32> = HashMap::new();
         for c in room.replace("-", "").chars() {
             *counts.entry(c).or_default() += 1;
         }
