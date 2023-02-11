@@ -6,7 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-aoc-main = "0.5.0"
+aoc-main = "*"
+bit-iter = "1.1.1"
 itertools = "0.10.5"
 lazy_static = "1.4.0"
 md5 = "0.7.0"
