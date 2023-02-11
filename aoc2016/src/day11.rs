@@ -134,6 +134,8 @@ impl<const N: u8> fmt::Debug for State<N> {
     }
 }
 
+type Digest = (Floor, [(u8, u8); 4]);
+
 impl<const N: u8> State<N> {
     fn floor_from_microchip(&self, microchip: u8) -> usize {
         for (i, floor) in self.floors.iter().enumerate() {
@@ -172,6 +174,21 @@ impl<const N: u8> State<N> {
         true
     }
 
+    fn digest(&self) -> Digest {
+        // the key insight is that we dont need to know *which* type of pair is on floors, we can
+        // just count them
+        // saving digests instead of states reduces the state space so much that it cuts down part_2
+        // from ~22s to ~42ms.
+        let mut digest: Digest = (self.elevator, [(0u8, 0u8); 4]);
+
+        for (i, floor) in self.floors.iter().enumerate() {
+            digest.1[i].0 = floor.0.count_ones() as u8;
+            digest.1[i].1 = floor.1.count_ones() as u8;
+        }
+
+        digest
+    }
+
     fn possible_moves(&self) -> Vec<Self> {
         // at each step, one can move the elevator up or down by one floor
         // the elevator may contain either a chip or a generator, or both of the same type
@@ -197,12 +214,6 @@ impl<const N: u8> State<N> {
         let dest_floors_idx = self.elevator.possible_moves();
 
         // possibly things to move
-        // 1..N microchip
-        // 1..N generator
-        // 1..N matched pair
-        // (1..N).iter().combinations(2) microchip
-        // (1..N).iter().combinations(2) generator
-
         let possible_moves: Vec<(Vec<u8>, Vec<u8>)> = (0..N)
             .map(|a| (vec![a], vec![]))
             .chain((0..N).map(|a| (vec![], vec![a])))
@@ -304,7 +315,7 @@ const FINAL_STATE_PART2: State<7> = State {
 fn count_steps<const N: u8>(initial_state: &State<N>, final_state: &State<N>) -> i64 {
     let mut moves = vec![*initial_state];
     let mut visited = HashSet::new();
-    visited.insert(*initial_state);
+    visited.insert(initial_state.digest());
 
     let mut steps = 0;
 
@@ -325,9 +336,9 @@ fn count_steps<const N: u8>(initial_state: &State<N>, final_state: &State<N>) ->
             let possible_moves = state.possible_moves();
             //println!("  Considering {} possible moves", possible_moves.len());
             for new_state in possible_moves {
-                if !visited.contains(&new_state) {
+                if !visited.contains(&new_state.digest()) {
                     //println!("  Found new state {new_state:?}");
-                    visited.insert(new_state);
+                    visited.insert(new_state.digest());
                     new_moves.push(new_state);
                 }
             }
@@ -336,9 +347,11 @@ fn count_steps<const N: u8>(initial_state: &State<N>, final_state: &State<N>) ->
         moves = new_moves;
         steps += 1;
 
-        let move_len = moves.len();
-        let visited_len = visited.len();
-        println!("Step {steps}: considering {move_len} moves, visited {visited_len} states");
+        // println!(
+        //     "Step {steps}: considering {} moves, visited {} states",
+        //     moves.len(),
+        //     visited.len()
+        // );
     }
 }
 
