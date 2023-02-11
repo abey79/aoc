@@ -218,8 +218,8 @@ impl<const N: u8> State<N> {
             .map(|a| (vec![a], vec![]))
             .chain((0..N).map(|a| (vec![], vec![a])))
             .chain((0..N).map(|a| (vec![a], vec![a])))
-            .chain((0..N).combinations(2).map(|a| (a.clone(), vec![])))
-            .chain((0..N).combinations(2).map(|a| (vec![], a.clone())))
+            .chain((0..N).combinations(2).map(|a| (a, vec![])))
+            .chain((0..N).combinations(2).map(|a| (vec![], a)))
             .collect();
 
         for (microchips, generators) in possible_moves {
@@ -259,7 +259,7 @@ impl<const N: u8> State<N> {
                 }
 
                 // valid move, save corresponding state
-                let mut new_state = self.clone();
+                let mut new_state = *self;
                 new_state.floors[self.elevator.index()] = new_source_floor;
                 new_state.floors[dest_floor_idx.index()] = new_dest_floor;
                 new_state.elevator = *dest_floor_idx;
@@ -322,7 +322,7 @@ fn count_steps<const N: u8>(initial_state: &State<N>, final_state: &State<N>) ->
     loop {
         let mut new_moves = vec![];
 
-        if moves.len() == 0 {
+        if moves.is_empty() {
             println!("No more moves to consider");
             return 0;
         }
